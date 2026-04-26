@@ -282,8 +282,6 @@ function openSupplier(id) {
     <label>Name<input name="name" value="${s.name || ""}" required></label><label>Contact<input name="contact" value="${s.contact || ""}" required></label>
     <label>Phone<input name="phone" value="${s.phone || ""}" required></label><label>Email<input name="email" value="${s.email || ""}"></label>
     <label>City<input name="city" value="${s.city || ""}"></label><label>GST<input name="gst" value="${s.gst || ""}"></label>
-    <label class="full">Address<textarea name="address">${s.address || ""}</textarea></label>
-    <label>License<input name="license" value="${s.license || ""}"></label>
     <div class="form-actions full"><button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary">Save</button></div></form>`);
   $("supplier-form").onsubmit = (event) => saveSupplier(event, id);
 }

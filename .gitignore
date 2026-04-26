@@ -5,7 +5,9 @@ __pycache__/
 .uv-cache/
 .uv-python/
 venv/
+venv_new/
 .env
+**/.env
 uploads/
 *.db
 *.sqlite

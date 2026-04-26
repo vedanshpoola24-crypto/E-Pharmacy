@@ -1,6 +1,1 @@
-Alembic migrations for Flask-Migrate.
-
-Common commands:
-  flask db upgrade
-  flask db migrate -m "describe change"
-  flask db downgrade
+Single-database configuration for Flask.

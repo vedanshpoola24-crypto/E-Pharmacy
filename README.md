@@ -1,106 +1,70 @@
-# MedStore SaaS E-Pharmacy
 
-Production-ready Flask/MySQL + static frontend implementation for an E-Pharmacy / Medical Store Management system.
+           _      _  _____ _                      
+          | |    | |/ ____| |                     
+ _ __ ___ | |  __| | (___ | |_ ___  _ __ ___     
+| '_ ` _ \| | / _` |\___ \| __/ _ \| '__/ _ \    
+| | | | | | || (_| |____) | || (_) | | |  __/    
+|_| |_| |_|_| \__,_|_____/ \__\___/|_|  \___|    
+                                                  
+      ++ SUPABASE POWERED E-PHARMACY ++
 
-## Stack
+# 💊 MedStore SaaS: The Ultimate E-Pharmacy Engine 🚀
 
-- Backend: Flask, SQLAlchemy ORM, Flask-Migrate/Alembic, JWT, Marshmallow, MySQL
-- Frontend: HTML, CSS, JavaScript, Chart.js, jsPDF
-- Deployment: Render backend + external MySQL, Vercel/Netlify frontend
+Welcome to the **MedStore SaaS**, a high-performance, production-ready pharmacy management system engineered for speed, security, and scalability. Now supercharged with **Supabase PostgreSQL** and **AI-Driven Analytics**.
 
-## MySQL Setup
+## 🔥 What's New? (The "Crazy" Migration)
+We just ripped out the old MySQL engine and replaced it with a **Twin-Turbo Supabase PostgreSQL** backend. 
+- **Zero Latency**: Direct PostgreSQL connections with SSL.
+- **Auto-Healing**: SQL Engine with `pool_pre_ping` and `pool_recycle`.
+- **Bulletproof Schema**: Optimized PostgreSQL types for precision billing.
+- **Streamlined UI**: Removed redundant fields (Address/License) to make data entry lightning fast!
 
-Create the database and user before running migrations:
+## 🛠️ The Tech Stack of Champions
+- **Backend**: Python Flask 🐍 + SQLAlchemy 🛡️ + JWT Auth 🔑
+- **Database**: Supabase PostgreSQL ⚡ (The Cloud King)
+- **Frontend**: Ultra-light Vanilla JS ⚡ + Chart.js 📊 + Lucide Icons ✨
+- **Security**: Flask-Limiter + CORS + Secure Headers 🔒
+- **Intelligence**: AI-Assistant for Inventory + Prescription OCR 🤖
 
-```sql
-CREATE DATABASE medstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'medstore'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON medstore.* TO 'medstore'@'localhost';
-FLUSH PRIVILEGES;
-```
+## ⚡ Quick Start (Locally)
 
-The backend reads the connection from `DATABASE_URL`:
-
-```text
-mysql+pymysql://medstore:password@localhost:3306/medstore
-```
-
-## Local Backend
-
+### 1. The Brain (Backend)
 ```bash
 cd backend
-python -m venv .venv
-.venv\Scripts\activate
+# Create & Activate Venv
+python -m venv venv
+.\venv\Scripts\activate
+
+# Install the Arsenal
 pip install -r requirements.txt
-set DATABASE_URL=mysql+pymysql://medstore:password@localhost:3306/medstore
-set FLASK_APP=app.py
-flask db upgrade
-flask seed
+
+# Run the Engine
+$env:FLASK_APP="wsgi.py"
 flask run
 ```
 
-Demo users:
-
-- `admin@medstore.local` / `Admin@12345`
-- `pharmacist@medstore.local` / `Pharma@12345`
-- `cashier@medstore.local` / `Cashier@12345`
-
-## SQLite to MySQL Migration
-
-1. Create a MySQL database and set `DATABASE_URL`.
-2. Run `flask db upgrade`.
-3. Put the legacy `medstore.db` in `backend/`.
-4. Run `flask import-sqlite`.
-
-The MySQL schema is defined in `backend/app/models/`, the initial Alembic migration is in `backend/migrations/versions/0001_initial_schema.py`, and a SQL reference is available at `backend/mysql_schema.sql`.
-
-## Local Frontend
-
-Open `frontend/index.html`, or serve it:
-
+### 2. The Face (Frontend)
 ```bash
 cd frontend
-python -m http.server 3000
+# Serve it like a Pro
+python -m http.server 5500
+```
+Visit: `http://localhost:5500`
+
+## 🌍 Environment Secrets (`.env`)
+Your `.env` file is your control room. Configure it like this:
+```text
+DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT_ID].supabase.co:5432/postgres?sslmode=require
+SECRET_KEY=YourSuperSecretKey
+CORS_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
 ```
 
-For deployed frontend builds, edit `frontend/js/config.js`:
+## 🚀 Features That Will Blow Your Mind
+- **📦 Smart Inventory**: Barcode scanning + Batch tracking + Expiry alerts.
+- **💰 Precision Billing**: GST calculation + Multiple payment modes (UPI/Card/Cash).
+- **📄 Prescription OCR**: Upload prescriptions and let the AI extract the data.
+- **📊 Real-time Dashboard**: Track sales trends and profit/loss in real-time.
+- **🤖 AI Pharmacist**: A built-in assistant that knows your stock better than you do!
 
-```js
-window.MEDSTORE_API_URL = "https://your-render-api.onrender.com";
-```
-
-## API Docs
-
-Run the backend and open:
-
-- Swagger UI: `http://localhost:5000/api/docs`
-- OpenAPI JSON: `http://localhost:5000/openapi.json`
-
-## Render Deployment
-
-1. Push this repository to GitHub.
-2. Create a MySQL database with a provider such as PlanetScale, Aiven, Railway, Clever Cloud, or your own server.
-3. Create a Web Service:
-   - Root directory: `backend`
-   - Build command: `pip install -r requirements.txt`
-   - Pre-deploy command: leave empty on Render free tier
-   - Start command: `python -m flask db upgrade && python -m flask seed && python -m gunicorn wsgi:app --config gunicorn.conf.py`
-4. Add environment variables from `backend/.env.example`.
-5. Set `DATABASE_URL` to your MySQL connection string.
-6. Set `CORS_ORIGINS` to your Vercel/Netlify frontend URL.
-7. Full cloud database instructions are in `DEPLOY_RENDER.md`.
-
-## Frontend Deployment
-
-Deploy the `frontend/` directory to Vercel or Netlify. Update `window.MEDSTORE_API_URL` in `index.html` or inject it during your build process.
-
-## Tests
-
-```bash
-cd backend
-pytest
-```
-
-## Included Features
-
-Authentication, role-based access, REST APIs, validation, pagination, search, dashboard charts, GST billing, discounts, cash/card/UPI payments, PDF/print invoices, refunds, barcode lookup, batch/expiry tracking, stock adjustments, prescription upload with OCR hook, reports, notifications, AI assistant, deployment files, security headers, CORS, rate limiting, and tests.
+---
+**MedStore SaaS** - *Because your pharmacy deserves a Ferrari, not a Bullock Cart.* 🏎️💨

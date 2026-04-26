@@ -1,6 +1,9 @@
 import sqlite3
 from datetime import datetime
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, jsonify, request
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -16,7 +19,6 @@ from app.services.seed import seed_demo_data
 def create_app(config_object=Config):
     app = Flask(__name__)
     app.config.from_object(config_object)
-
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
