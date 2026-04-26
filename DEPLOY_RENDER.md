@@ -14,7 +14,7 @@ This setup stores production data in Render PostgreSQL. The backend uses the `DA
 6. Wait for deploy to finish. On the free tier, migrations run as part of the start command:
 
 ```bash
-python -m flask db upgrade && python -m flask seed && python -m gunicorn app:app --config gunicorn.conf.py
+python -m flask db upgrade && python -m flask seed && python -m gunicorn wsgi:app --config gunicorn.conf.py
 ```
 
 7. Open:
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 7. Set **Start Command**:
 
 ```bash
-python -m flask db upgrade && python -m flask seed && python -m gunicorn app:app --config gunicorn.conf.py
+python -m flask db upgrade && python -m flask seed && python -m gunicorn wsgi:app --config gunicorn.conf.py
 ```
 
 8. Add environment variables:

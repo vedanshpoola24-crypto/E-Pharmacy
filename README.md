@@ -66,7 +66,7 @@ Run the backend and open:
    - Root directory: `backend`
    - Build command: `pip install -r requirements.txt`
    - Pre-deploy command: leave empty on Render free tier
-   - Start command: `python -m flask db upgrade && python -m flask seed && python -m gunicorn app:app --config gunicorn.conf.py`
+   - Start command: `python -m flask db upgrade && python -m flask seed && python -m gunicorn wsgi:app --config gunicorn.conf.py`
 4. Add environment variables from `backend/.env.example`.
 5. Set `DATABASE_URL` from Render PostgreSQL.
 6. Set `CORS_ORIGINS` to your Vercel/Netlify frontend URL.
