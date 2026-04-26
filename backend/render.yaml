@@ -18,7 +18,7 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://your-frontend.vercel.app,https://your-frontend.netlify.app,http://localhost:3000
+        value: https://e-pharmacy-sigma-mauve.vercel.app,https://your-frontend.vercel.app,https://your-frontend.netlify.app,http://localhost:3000
       - key: JWT_EXPIRES_HOURS
         value: "12"
       - key: WEB_CONCURRENCY
