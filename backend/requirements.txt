@@ -6,7 +6,7 @@ Flask-Migrate==4.0.7
 Flask-SQLAlchemy==3.1.1
 SQLAlchemy==2.0.32
 marshmallow==3.21.3
-psycopg[binary]>=3.2.13,<4
+PyMySQL==1.1.1
 gunicorn==22.0.0
 python-dotenv==1.0.1
 bleach==6.1.0

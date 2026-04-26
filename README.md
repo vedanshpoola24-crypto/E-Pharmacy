@@ -1,12 +1,29 @@
 # MedStore SaaS E-Pharmacy
 
-Production-ready Flask/PostgreSQL + static frontend implementation for an E-Pharmacy / Medical Store Management system.
+Production-ready Flask/MySQL + static frontend implementation for an E-Pharmacy / Medical Store Management system.
 
 ## Stack
 
-- Backend: Flask, SQLAlchemy ORM, Flask-Migrate/Alembic, JWT, Marshmallow, PostgreSQL
+- Backend: Flask, SQLAlchemy ORM, Flask-Migrate/Alembic, JWT, Marshmallow, MySQL
 - Frontend: HTML, CSS, JavaScript, Chart.js, jsPDF
-- Deployment: Render backend + Render PostgreSQL, Vercel/Netlify frontend
+- Deployment: Render backend + external MySQL, Vercel/Netlify frontend
+
+## MySQL Setup
+
+Create the database and user before running migrations:
+
+```sql
+CREATE DATABASE medstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'medstore'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON medstore.* TO 'medstore'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+The backend reads the connection from `DATABASE_URL`:
+
+```text
+mysql+pymysql://medstore:password@localhost:3306/medstore
+```
 
 ## Local Backend
 
@@ -15,6 +32,7 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+set DATABASE_URL=mysql+pymysql://medstore:password@localhost:3306/medstore
 set FLASK_APP=app.py
 flask db upgrade
 flask seed
@@ -27,14 +45,14 @@ Demo users:
 - `pharmacist@medstore.local` / `Pharma@12345`
 - `cashier@medstore.local` / `Cashier@12345`
 
-## SQLite to PostgreSQL Migration
+## SQLite to MySQL Migration
 
-1. Create a PostgreSQL database and set `DATABASE_URL`.
+1. Create a MySQL database and set `DATABASE_URL`.
 2. Run `flask db upgrade`.
 3. Put the legacy `medstore.db` in `backend/`.
 4. Run `flask import-sqlite`.
 
-The new PostgreSQL schema is defined in `backend/app/models/`, the initial Alembic migration is in `backend/migrations/versions/0001_initial_schema.py`, and a SQL reference is available at `backend/postgresql_schema.sql`.
+The MySQL schema is defined in `backend/app/models/`, the initial Alembic migration is in `backend/migrations/versions/0001_initial_schema.py`, and a SQL reference is available at `backend/mysql_schema.sql`.
 
 ## Local Frontend
 
@@ -61,14 +79,14 @@ Run the backend and open:
 ## Render Deployment
 
 1. Push this repository to GitHub.
-2. In Render, create a PostgreSQL database or use the root `render.yaml` as a Blueprint.
+2. Create a MySQL database with a provider such as PlanetScale, Aiven, Railway, Clever Cloud, or your own server.
 3. Create a Web Service:
    - Root directory: `backend`
    - Build command: `pip install -r requirements.txt`
    - Pre-deploy command: leave empty on Render free tier
    - Start command: `python -m flask db upgrade && python -m flask seed && python -m gunicorn wsgi:app --config gunicorn.conf.py`
 4. Add environment variables from `backend/.env.example`.
-5. Set `DATABASE_URL` from Render PostgreSQL.
+5. Set `DATABASE_URL` to your MySQL connection string.
 6. Set `CORS_ORIGINS` to your Vercel/Netlify frontend URL.
 7. Full cloud database instructions are in `DEPLOY_RENDER.md`.
 
