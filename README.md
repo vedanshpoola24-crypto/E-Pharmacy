@@ -1,4 +1,4 @@
-# MedStore SaaS E-Pharmacy
+# MedStore  E-Pharmacy
 
 Production-ready Flask/PostgreSQL + static frontend implementation for an E-Pharmacy / Medical Store Management system.
 
