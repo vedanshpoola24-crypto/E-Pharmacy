@@ -343,7 +343,18 @@ async function saveBill(event) {
     const taxable = Number(med.mrp) * item.qty - Number(item.discount || 0);
     return sum + taxable + taxable * Number(med.gst_rate || 0) / 100;
   }, 0);
-  const payload = { ...form, prescription_id: form.prescription_id ? Number(form.prescription_id) : null, items: state.billItems, payments: [{ mode: form.mode, amount: previewTotal.toFixed(2) }] };
+  const { mode, ...billFields } = form;
+  const items = state.billItems.map((item) => ({
+    medicine_id: item.medicine_id,
+    qty: item.qty,
+    discount: item.discount || "0.00",
+  }));
+  const payload = {
+    ...billFields,
+    prescription_id: form.prescription_id ? Number(form.prescription_id) : null,
+    items,
+    payments: [{ mode, amount: previewTotal.toFixed(2) }],
+  };
   try {
     const bill = await api("/api/bills", { method: "POST", body: JSON.stringify(payload) });
     closeModal();
