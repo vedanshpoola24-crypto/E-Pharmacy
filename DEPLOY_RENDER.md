@@ -11,10 +11,10 @@ This setup stores production data in Render PostgreSQL. The backend uses the `DA
 5. Render creates:
    - `medstore-postgres`
    - `medstore-api`
-6. Wait for deploy to finish. The pre-deploy command runs:
+6. Wait for deploy to finish. On the free tier, migrations run as part of the start command:
 
 ```bash
-flask db upgrade && flask seed
+flask db upgrade && flask seed && gunicorn "app:app" --config gunicorn.conf.py
 ```
 
 7. Open:
@@ -42,16 +42,12 @@ backend
 pip install -r requirements.txt
 ```
 
-6. Set **Pre-Deploy Command**:
-
-```bash
-flask db upgrade && flask seed
-```
+6. Leave **Pre-Deploy Command** empty on the free tier.
 
 7. Set **Start Command**:
 
 ```bash
-gunicorn "app:app" --config gunicorn.conf.py
+flask db upgrade && flask seed && gunicorn "app:app" --config gunicorn.conf.py
 ```
 
 8. Add environment variables:

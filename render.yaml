@@ -6,8 +6,7 @@ services:
     rootDir: backend
     autoDeploy: true
     buildCommand: pip install -r requirements.txt
-    preDeployCommand: flask db upgrade && flask seed
-    startCommand: gunicorn "app:app" --config gunicorn.conf.py
+    startCommand: flask db upgrade && flask seed && gunicorn "app:app" --config gunicorn.conf.py
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
