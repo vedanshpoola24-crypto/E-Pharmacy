@@ -1,4 +1,6 @@
-const API_URL = window.MEDSTORE_API_URL || localStorage.getItem("MEDSTORE_API_URL") || "http://localhost:5000";
+const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const configuredApiUrl = window.MEDSTORE_API_URL || localStorage.getItem("MEDSTORE_API_URL") || "";
+const API_URL = configuredApiUrl || (isLocalHost ? "http://localhost:5000" : "");
 const state = {
   token: localStorage.getItem("medstore_token"),
   user: JSON.parse(localStorage.getItem("medstore_user") || "null"),
@@ -22,14 +24,17 @@ const debounce = (fn, wait = 350) => {
 };
 
 async function api(path, options = {}) {
+  if (!API_URL && path.startsWith("/api/")) {
+    throw new Error("Backend API URL is not configured. Add your Render backend URL in frontend/js/config.js.");
+  }
   const headers = options.headers || {};
   if (!(options.body instanceof FormData)) headers["Content-Type"] = "application/json";
   if (state.token) headers.Authorization = `Bearer ${state.token}`;
   const response = await fetch(`${API_URL}${path}`, { ...options, headers });
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  const data = text && response.headers.get("content-type")?.includes("application/json") ? JSON.parse(text) : null;
   if (!response.ok) {
-    const message = data?.message || JSON.stringify(data?.messages || data) || "Request failed";
+    const message = data?.message || JSON.stringify(data?.messages || data) || text || "Request failed";
     throw new Error(message);
   }
   return data;

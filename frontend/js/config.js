@@ -1,5 +1,5 @@
-// Local default. For production, replace the empty string below with your Render backend URL:
-// window.MEDSTORE_API_URL = "https://your-medstore-api.onrender.com";
+// For production, paste your Render backend URL below:
+// Example: window.MEDSTORE_API_URL = "https://medstore-api.onrender.com";
 window.MEDSTORE_API_URL =
   window.MEDSTORE_API_URL ||
   "" ||
