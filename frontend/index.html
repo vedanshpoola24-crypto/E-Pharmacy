@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedStore SaaS</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <main id="auth-view" class="auth-view">
+    <section class="auth-panel">
+      <div class="brand-row">
+        <span class="brand-mark"><i data-lucide="cross"></i></span>
+        <div>
+          <h1>MedStore</h1>
+          <p>Production pharmacy management</p>
+        </div>
+      </div>
+      <form id="login-form" class="stack">
+        <label>Email<input id="login-email" type="email" value="admin@medstore.local" required></label>
+        <label>Password<input id="login-password" type="password" value="Admin@12345" required></label>
+        <button class="btn primary" type="submit"><i data-lucide="log-in"></i>Login</button>
+      </form>
+      <form id="register-form" class="stack collapsible">
+        <label>Name<input id="register-name" type="text" required></label>
+        <label>Email<input id="register-email" type="email" required></label>
+        <label>Password<input id="register-password" type="password" required></label>
+        <label>Role<select id="register-role"><option value="pharmacist">Pharmacist</option><option value="cashier">Cashier</option><option value="admin">Admin</option></select></label>
+        <button class="btn" type="submit"><i data-lucide="user-plus"></i>Register</button>
+      </form>
+      <button id="toggle-register" class="link-button">Create first account</button>
+    </section>
+  </main>
+
+  <div id="app-view" class="app hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand"><span class="brand-mark"><i data-lucide="cross"></i></span><strong>MedStore</strong></div>
+      <button class="nav active" data-page="dashboard"><i data-lucide="layout-dashboard"></i>Dashboard</button>
+      <button class="nav" data-page="medicines"><i data-lucide="pill"></i>Medicines</button>
+      <button class="nav" data-page="suppliers"><i data-lucide="truck"></i>Suppliers</button>
+      <button class="nav" data-page="billing"><i data-lucide="receipt"></i>Billing</button>
+      <button class="nav" data-page="prescriptions"><i data-lucide="file-text"></i>Prescriptions</button>
+      <button class="nav" data-page="reports"><i data-lucide="bar-chart-3"></i>Reports</button>
+      <button class="nav" data-page="notifications"><i data-lucide="bell"></i>Notifications</button>
+      <button class="nav" data-page="assistant"><i data-lucide="bot"></i>AI Assistant</button>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <button id="mobile-menu" class="icon-btn"><i data-lucide="menu"></i></button>
+        <div><h2 id="page-title">Dashboard</h2><span id="api-chip" class="chip">Checking API</span></div>
+        <div class="top-actions">
+          <button id="theme-btn" class="icon-btn" title="Theme"><i data-lucide="moon"></i></button>
+          <span id="user-chip" class="chip"></span>
+          <button id="logout-btn" class="icon-btn" title="Logout"><i data-lucide="log-out"></i></button>
+        </div>
+      </header>
+
+      <section id="page-dashboard" class="page active">
+        <div class="metric-grid">
+          <article class="metric"><span>Total Medicines</span><strong id="m-total">0</strong></article>
+          <article class="metric"><span>Low Stock</span><strong id="m-low">0</strong></article>
+          <article class="metric"><span>Expiring Soon</span><strong id="m-expiring">0</strong></article>
+          <article class="metric"><span>Sales</span><strong id="m-sales">0</strong></article>
+        </div>
+        <div class="grid-2">
+          <section class="panel"><div class="panel-head"><h3>Sales Trend</h3></div><canvas id="sales-chart"></canvas></section>
+          <section class="panel"><div class="panel-head"><h3>Top Selling</h3></div><canvas id="top-chart"></canvas></section>
+        </div>
+        <section class="panel"><div class="panel-head"><h3>Recent Bills</h3><button class="btn small" data-page-link="billing">Open Billing</button></div><div id="recent-bills"></div></section>
+      </section>
+
+      <section id="page-medicines" class="page">
+        <div class="toolbar">
+          <input id="medicine-search" class="search" placeholder="Search medicines, barcode, category">
+          <input id="barcode-input" class="search compact" placeholder="Scan barcode">
+          <button id="barcode-btn" class="btn"><i data-lucide="scan-barcode"></i>Find</button>
+          <button id="add-medicine-btn" class="btn primary"><i data-lucide="plus"></i>Add</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Batch</th><th>Stock</th><th>Expiry</th><th>MRP</th><th>Supplier</th><th></th></tr></thead><tbody id="medicine-rows"></tbody></table></div>
+        <div id="medicine-pages" class="pagination"></div>
+      </section>
+
+      <section id="page-suppliers" class="page">
+        <div class="toolbar"><input id="supplier-search" class="search" placeholder="Search suppliers"><button id="add-supplier-btn" class="btn primary"><i data-lucide="plus"></i>Add</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Contact</th><th>Phone</th><th>Email</th><th>City</th><th></th></tr></thead><tbody id="supplier-rows"></tbody></table></div>
+      </section>
+
+      <section id="page-billing" class="page">
+        <div class="toolbar"><input id="bill-search" class="search" placeholder="Search invoices"><button id="new-bill-btn" class="btn primary"><i data-lucide="receipt"></i>New Bill</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Patient</th><th>Date</th><th>GST</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody id="bill-rows"></tbody></table></div>
+      </section>
+
+      <section id="page-prescriptions" class="page">
+        <div class="toolbar"><input id="rx-search" class="search" placeholder="Search prescriptions"><button id="add-rx-btn" class="btn primary"><i data-lucide="upload"></i>Upload</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Issue</th><th>Valid</th><th>Status</th><th></th></tr></thead><tbody id="rx-rows"></tbody></table></div>
+      </section>
+
+      <section id="page-reports" class="page">
+        <div class="grid-2">
+          <section class="panel"><div class="panel-head"><h3>GST Report</h3></div><div id="gst-report" class="report-number">0</div></section>
+          <section class="panel"><div class="panel-head"><h3>Profit / Loss</h3></div><div id="profit-report" class="report-number">0</div></section>
+        </div>
+        <section class="panel"><div class="panel-head"><h3>Supplier-wise Inventory</h3></div><div id="supplier-report"></div></section>
+      </section>
+
+      <section id="page-notifications" class="page">
+        <div class="toolbar"><button id="refresh-alerts-btn" class="btn primary"><i data-lucide="refresh-cw"></i>Refresh Alerts</button></div>
+        <div id="notification-list" class="list"></div>
+      </section>
+
+      <section id="page-assistant" class="page">
+        <section class="panel chat-panel">
+          <div id="chat-log" class="chat-log"></div>
+          <form id="chat-form" class="chat-form"><input id="chat-input" placeholder="Ask about stock, alternatives, prescription text"><button class="btn primary"><i data-lucide="send"></i>Send</button></form>
+        </section>
+      </section>
+    </section>
+  </div>
+
+  <div id="modal" class="modal-backdrop hidden"><section class="modal"><div class="modal-head"><h3 id="modal-title"></h3><button id="modal-close" class="icon-btn"><i data-lucide="x"></i></button></div><div id="modal-body"></div></section></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
