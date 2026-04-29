@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MedStore SaaS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -114,11 +117,53 @@
         <div id="notification-list" class="list"></div>
       </section>
 
-      <section id="page-assistant" class="page">
-        <section class="panel chat-panel">
-          <div id="chat-log" class="chat-log"></div>
-          <form id="chat-form" class="chat-form"><input id="chat-input" placeholder="Ask about stock, alternatives, prescription text"><button class="btn primary"><i data-lucide="send"></i>Send</button></form>
-        </section>
+      <section id="page-assistant" class="page ai-page">
+        <div class="ai-layout">
+          <div class="ai-chat-col">
+            <div class="ai-header">
+              <div class="ai-avatar"><i data-lucide="bot"></i></div>
+              <div class="ai-header-info">
+                <h3 class="ai-title">MedBot <span class="groq-badge">Powered by Groq &bull; Llama 3.3</span></h3>
+                <p class="ai-subtitle">Intelligent pharmacy assistant &mdash; medicines, stock, prescriptions &amp; more</p>
+              </div>
+              <button id="clear-chat-btn" class="icon-btn" title="Clear chat"><i data-lucide="trash-2"></i></button>
+            </div>
+
+            <div id="chat-log" class="chat-log">
+              <div class="chat-welcome" id="chat-welcome">
+                <div class="welcome-icon"><i data-lucide="sparkles"></i></div>
+                <h4>How can I help you today?</h4>
+                <p>Ask me anything about medicines, stock, prescriptions, drug interactions, or pharmacy billing.</p>
+                <div class="quick-prompts">
+                  <button class="prompt-chip" onclick="usePrompt('Which medicines are running low on stock?')"><i data-lucide="package-x"></i> Low stock alert</button>
+                  <button class="prompt-chip" onclick="usePrompt('What are the alternatives for Paracetamol?')"><i data-lucide="refresh-cw"></i> Find alternatives</button>
+                  <button class="prompt-chip" onclick="usePrompt('Explain Schedule H drug rules in India')"><i data-lucide="shield-check"></i> Schedule H rules</button>
+                  <button class="prompt-chip" onclick="usePrompt('How should I store insulin and temperature-sensitive medicines?')"><i data-lucide="thermometer"></i> Storage tips</button>
+                  <button class="prompt-chip" onclick="usePrompt('What are common drug interactions I should warn patients about?')"><i data-lucide="alert-triangle"></i> Drug interactions</button>
+                  <button class="prompt-chip" onclick="usePrompt('Explain GST rates applicable to medicines in India')"><i data-lucide="receipt"></i> GST on medicines</button>
+                </div>
+              </div>
+            </div>
+
+            <form id="chat-form" class="chat-input-bar">
+              <div class="chat-input-wrap">
+                <textarea id="chat-input" placeholder="Ask about medicines, stock, prescriptions, drug interactions..." autocomplete="off" rows="1"></textarea>
+                <button id="chat-send-btn" class="chat-send-btn" type="submit" title="Send"><i data-lucide="send"></i></button>
+              </div>
+              <p class="ai-disclaimer"><i data-lucide="info"></i> Press Enter to send &bull; Shift+Enter for new line &bull; MedBot can make mistakes.</p>
+            </form>
+          </div>
+
+          <div class="ai-sidebar spline-sidebar">
+            <iframe
+              src="https://my.spline.design/happyrobotbutton-crTiVKFI6Tn95nyOMxUqkaB9/"
+              frameborder="0"
+              class="spline-frame"
+              title="MedBot 3D Robot"
+              allow="autoplay"
+            ></iframe>
+          </div>
+        </div>
       </section>
     </section>
   </div>

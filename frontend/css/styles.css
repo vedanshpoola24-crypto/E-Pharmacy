@@ -92,3 +92,78 @@ td { vertical-align:middle; }
   .form-grid { grid-template-columns:1fr; }
 }
 @media (min-width:901px) { #mobile-menu { display:none; } }
+
+/* ── AI ASSISTANT PAGE ──────────────────────────────────── */
+.ai-page { padding:0 !important; height:calc(100vh - 64px); overflow:hidden; }
+.ai-layout { display:grid; grid-template-columns:1fr 300px; height:100%; gap:0; }
+.ai-chat-col { display:grid; grid-template-rows:auto 1fr auto; height:100%; min-height:0; border-right:1px solid var(--border); }
+
+/* Header */
+.ai-header { display:flex; align-items:center; gap:14px; padding:18px 22px; border-bottom:1px solid var(--border); background:var(--surface); }
+.ai-avatar { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); display:grid; place-items:center; color:#fff; flex:0 0 auto; box-shadow:0 4px 12px color-mix(in srgb, var(--brand) 35%, transparent); }
+.ai-header-info { flex:1; min-width:0; }
+.ai-title { margin:0; font-size:16px; font-weight:700; display:flex; align-items:center; gap:10px; }
+.groq-badge { font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; background:linear-gradient(90deg,#7c3aed,#4f46e5); color:#fff; letter-spacing:.3px; }
+.ai-subtitle { margin:2px 0 0; font-size:13px; color:var(--muted); }
+
+/* Chat log */
+.chat-log { padding:20px 22px; overflow-y:auto; display:flex; flex-direction:column; gap:16px; min-height:0; scroll-behavior:smooth; }
+
+/* Welcome screen */
+.chat-welcome { display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; padding:32px 16px; }
+.welcome-icon { width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg, color-mix(in srgb,var(--brand) 15%,transparent), color-mix(in srgb,var(--brand-2) 15%,transparent)); display:grid; place-items:center; color:var(--brand); font-size:28px; }
+.chat-welcome h4 { margin:0; font-size:20px; font-weight:700; }
+.chat-welcome p { margin:0; color:var(--muted); max-width:420px; line-height:1.6; }
+.quick-prompts { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:8px; }
+.prompt-chip { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:13px; font-weight:500; transition:.18s; white-space:nowrap; }
+.prompt-chip:hover { border-color:var(--brand); color:var(--brand); background:color-mix(in srgb,var(--brand) 8%,transparent); transform:translateY(-1px); }
+.prompt-chip svg { width:14px; height:14px; flex:0 0 auto; }
+
+/* Chat bubbles */
+.bubble { max-width:78%; padding:12px 16px; border-radius:16px; line-height:1.65; font-size:14px; animation:fadeUp .2s ease; }
+.bubble.user { align-self:flex-end; background:var(--brand); color:#fff; border-bottom-right-radius:4px; }
+.bubble.assistant { align-self:flex-start; background:var(--surface); border:1px solid var(--border); border-bottom-left-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.bubble .source-tag { display:inline-flex; align-items:center; gap:5px; font-size:11px; opacity:.65; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
+.bubble .source-tag.groq { color:var(--brand); opacity:1; }
+
+/* Medicine cards inside chat */
+.med-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-top:12px; }
+.med-card { background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px; font-size:13px; }
+.med-card-name { font-weight:600; margin-bottom:4px; }
+.med-card-meta { color:var(--muted); display:flex; flex-direction:column; gap:3px; }
+.med-card-stock.ok { color:var(--ok); } .med-card-stock.warn { color:var(--warn); } .med-card-stock.danger { color:var(--danger); }
+
+/* Typing indicator */
+.typing-bubble { display:flex; align-items:center; gap:6px; padding:14px 18px; background:var(--surface); border:1px solid var(--border); border-radius:16px; border-bottom-left-radius:4px; align-self:flex-start; }
+.typing-bubble span { width:7px; height:7px; border-radius:50%; background:var(--muted); animation:typingPulse 1.2s infinite; }
+.typing-bubble span:nth-child(2) { animation-delay:.2s; } .typing-bubble span:nth-child(3) { animation-delay:.4s; }
+@keyframes typingPulse { 0%,80%,100% { transform:scale(.8); opacity:.5; } 40% { transform:scale(1); opacity:1; } }
+
+/* Input bar */
+.chat-input-bar { padding:16px 22px; border-top:1px solid var(--border); background:var(--surface); display:grid; gap:8px; }
+.chat-input-wrap { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:flex-end; }
+.chat-input-wrap textarea { border-radius:12px; min-height:46px; max-height:140px; padding:12px 16px; font-size:14px; resize:none; line-height:1.5; overflow-y:auto; font-family:inherit; }
+.chat-send-btn { width:46px; height:46px; border-radius:12px; background:var(--brand); border:none; color:#fff; display:grid; place-items:center; cursor:pointer; transition:.15s; flex:0 0 auto; }
+.chat-send-btn:hover { filter:brightness(1.1); transform:scale(1.05); }
+.chat-send-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.ai-disclaimer { margin:0; font-size:11px; color:var(--muted); display:flex; align-items:center; gap:5px; }
+.ai-disclaimer svg { width:12px; height:12px; flex:0 0 auto; }
+
+/* Sidebar — Spline 3D */
+.spline-sidebar { padding:0 !important; overflow:hidden; background:transparent; border-left:1px solid var(--border); }
+.spline-frame { width:100%; height:100%; border:none; display:block; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* Markdown-like formatting in bubbles */
+.bubble strong { font-weight:700; }
+.bubble ul, .bubble ol { padding-left:18px; margin:8px 0; }
+.bubble li { margin:4px 0; }
+.bubble code { background:color-mix(in srgb,var(--brand) 12%,transparent); padding:1px 5px; border-radius:4px; font-size:13px; }
+
+@media (max-width:900px) {
+  .ai-layout { grid-template-columns:1fr; }
+  .ai-sidebar { display:none; }
+  .ai-page { height:calc(100vh - 56px); }
+}
+

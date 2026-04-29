@@ -14,3 +14,4 @@ Pillow>=11.3.0,<13
 pytesseract==0.3.13
 pytest==8.3.2
 psycopg2-binary==2.9.9
+groq>=1.2.0

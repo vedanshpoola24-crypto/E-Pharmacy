@@ -455,24 +455,124 @@ async function refreshAlerts() {
   toast("Alerts refreshed", "success");
 }
 
+// ── AI ASSISTANT ─────────────────────────────────────────
+const chatHistory = [];
+let statMsgs = 0, statAI = 0;
+
+function usePrompt(text) {
+  const input = $("chat-input");
+  input.value = text;
+  input.focus();
+}
+
+function renderMarkdown(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/^\* /gm, "<li>")
+    .replace(/^- /gm, "<li>")
+    .replace(/(<li>.*)/gms, (m) => `<ul>${m}</ul>`)
+    .replace(/<\/ul>\s*<ul>/g, "")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\n/g, "<br>");
+}
+
+function buildMedCards(matches) {
+  if (!matches || !matches.length) return "";
+  const cards = matches.map((m) => {
+    const stockClass = m.status === "low_stock" ? "warn" : "ok";
+    return `<div class="med-card">
+      <div class="med-card-name">${m.name}</div>
+      <div class="med-card-meta">
+        <span>${m.category}${m.rx_required ? " &bull; Rx" : " &bull; OTC"}</span>
+        <span class="med-card-stock ${stockClass}">Stock: ${m.stock} units &bull; Rs ${m.mrp.toFixed(2)}</span>
+        <span>Exp: ${m.expiry_date}</span>
+      </div>
+    </div>`;
+  }).join("");
+  return `<div class="med-cards">${cards}</div>`;
+}
+
+function appendUserBubble(text) {
+  const welcome = $("chat-welcome");
+  if (welcome) welcome.remove();
+  const el = document.createElement("div");
+  el.className = "bubble user";
+  el.textContent = text;
+  $("chat-log").appendChild(el);
+  scrollChat();
+}
+
+function showTyping() {
+  const el = document.createElement("div");
+  el.id = "typing-indicator";
+  el.className = "typing-bubble";
+  el.innerHTML = "<span></span><span></span><span></span>";
+  $("chat-log").appendChild(el);
+  scrollChat();
+}
+
+function hideTyping() {
+  const el = $("typing-indicator");
+  if (el) el.remove();
+}
+
+function appendAIBubble(data) {
+  const sourceLabel = data.source === "groq"
+    ? `<span class="source-tag groq"><i data-lucide="zap" style="width:11px;height:11px"></i> Groq &bull; Llama 3</span>`
+    : `<span class="source-tag"><i data-lucide="database" style="width:11px;height:11px"></i> Local</span>`;
+  const cards = buildMedCards(data.matches);
+  const el = document.createElement("div");
+  el.className = "bubble assistant";
+  el.innerHTML = renderMarkdown(data.answer) + cards + sourceLabel;
+  $("chat-log").appendChild(el);
+  lucide.createIcons();
+  scrollChat();
+}
+
+function scrollChat() {
+  const log = $("chat-log");
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateStats() {
+  const sm = document.getElementById("stat-msgs");
+  const sa = document.getElementById("stat-ai");
+  if (sm) sm.textContent = statMsgs;
+  if (sa) sa.textContent = statAI;
+}
+
 async function chat(event) {
   event.preventDefault();
   const input = $("chat-input");
   const message = input.value.trim();
   if (!message) return;
-  appendChat(message, "user");
+  const btn = $("chat-send-btn");
+  setBusy(btn, true);
   input.value = "";
+  input.style.height = "auto";
+  appendUserBubble(message);
+  chatHistory.push({ role: "user", content: message });
+  statMsgs++;
+  updateStats();
+  showTyping();
   try {
-    const data = await api("/api/ai/chat", { method: "POST", body: JSON.stringify({ message }) });
-    appendChat(`${data.answer}${data.matches?.length ? "<br>" + data.matches.map((m) => `${m.name} - Stock ${m.stock} - ${money(m.mrp)}`).join("<br>") : ""}`);
+    const data = await api("/api/ai/chat", {
+      method: "POST",
+      body: JSON.stringify({ message, history: chatHistory.slice(-10) }),
+    });
+    hideTyping();
+    appendAIBubble(data);
+    chatHistory.push({ role: "assistant", content: data.answer });
+    statAI++;
+    updateStats();
   } catch (err) {
-    appendChat(err.message);
+    hideTyping();
+    const errData = { answer: `Error: ${err.message}`, matches: [], source: "local" };
+    appendAIBubble(errData);
+  } finally {
+    setBusy(btn, false);
+    input.focus();
   }
-}
-
-function appendChat(html, who = "assistant") {
-  $("chat-log").insertAdjacentHTML("beforeend", `<div class="bubble ${who}">${html}</div>`);
-  $("chat-log").scrollTop = $("chat-log").scrollHeight;
 }
 
 function wire() {
@@ -508,6 +608,30 @@ function wire() {
   $("add-rx-btn").onclick = openPrescription;
   $("refresh-alerts-btn").onclick = refreshAlerts;
   $("chat-form").onsubmit = chat;
+
+  // Textarea: Enter = submit, Shift+Enter = new line
+  const chatTextarea = $("chat-input");
+  chatTextarea.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      $("chat-form").dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }
+  });
+  // Auto-resize textarea as user types
+  chatTextarea.addEventListener("input", () => {
+    chatTextarea.style.height = "auto";
+    chatTextarea.style.height = Math.min(chatTextarea.scrollHeight, 140) + "px";
+  });
+
+  $("clear-chat-btn").onclick = () => {
+    $("chat-log").innerHTML = `<div class="chat-welcome" id="chat-welcome">
+      <div class="welcome-icon"><i data-lucide="sparkles"></i></div>
+      <h4>Chat cleared</h4>
+      <p>Start a new conversation below.</p>
+    </div>`;
+    chatHistory.length = 0;
+    lucide.createIcons();
+  };
 }
 
 document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
@@ -527,6 +651,7 @@ Object.assign(window, {
   verifyRx,
   markNotification,
   closeModal,
+  usePrompt,
 });
 lucide.createIcons();
 checkHealth();

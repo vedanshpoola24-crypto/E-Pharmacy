@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+*$py.class
 .pytest_cache/
 .venv/
 .uv-cache/
@@ -15,3 +16,8 @@ uploads/
 node_modules/
 dist/
 .DS_Store
+.vscode/
+.idea/
+backend/instance/
+*.sublime-workspace
+*.sublime-project

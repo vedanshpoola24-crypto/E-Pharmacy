@@ -30,7 +30,7 @@ We're talking:
 - 🛡️ **JWT Auth** — Only real pharmacists get in.
 - 💊 **Smart Inventory** — Know your stock before your stock knows it's low.
 - 🧾 **GST Billing Engine** — Invoices with real math, not calculator vibes.
-- 🤖 **AI Assistant** — Your 24/7 digital pharmacist who never sleeps.
+- 🤖 **AI Assistant** — Your 24/7 digital pharmacist powered by **Groq (Llama 3.3)**.
 - 📸 **Prescription OCR** — Upload an image, get the medicines extracted. Automagically.
 - 🌩️ **Supabase PostgreSQL** — Cloud-native database on steroids.
 
@@ -110,6 +110,7 @@ DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db.YOUR_PROJECT.supabase.co:543
 SECRET_KEY=make-this-super-random-or-get-hacked
 JWT_SECRET_KEY=another-very-secret-key
 CORS_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
+GROQ_API_KEY=your-groq-api-key-here
 ```
 
 ### Step 5 — LAUNCH 🚀
@@ -126,7 +127,6 @@ python -m http.server 5500
 Open **http://localhost:5500** and witness glory.
 
 ---
-
 ## 🔑 Default Demo Credentials
 
 | Role | Email | Password |
@@ -183,6 +183,10 @@ GET    /api/health              → Health check (DB ping)
 | 🔐 Auth | Flask-JWT-Extended |
 | 📦 Migrations | Flask-Migrate (Alembic) |
 | ✅ Validation | Marshmallow |
+<<<<<<< HEAD
+=======
+| 🧠 AI Engine | Groq API (Llama-3.3-70b-versatile) |
+>>>>>>> 78b8890 (added ai assistant and improved frontend)
 | 🛡️ Rate Limiting | Flask-Limiter |
 | 🌐 CORS | Flask-Cors |
 | 📊 Charts | Chart.js |
@@ -269,7 +273,11 @@ E-Pharmacy/
 ✅ GST Report
 ✅ Supplier-wise Inventory Reports
 ✅ Stock Adjustment Ledger
+<<<<<<< HEAD
 ✅ AI Chatbot Assistant
+=======
+✅ AI Chatbot Assistant (Groq Llama 3.3 + Spline 3D Model)
+>>>>>>> 78b8890 (added ai assistant and improved frontend)
 ✅ PDF Invoice Export
 ✅ Audit Logs (every action tracked)
 ✅ Dark / Light Theme Toggle
